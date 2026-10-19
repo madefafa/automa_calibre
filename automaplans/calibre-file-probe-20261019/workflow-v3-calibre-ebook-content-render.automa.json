@@ -1,0 +1,130 @@
+{
+  "extVersion": "1.30.02",
+  "name": "TEST Calibre ebook content render v3",
+  "icon": "riWindowLine",
+  "table": [],
+  "version": "1.30.02",
+  "drawflow": {
+    "edges": [
+      {
+        "id": "vueflow__edge-trigger-calibre-001-output-1-active-tab-calibre-001-input-1",
+        "type": "custom",
+        "source": "trigger-calibre-001",
+        "target": "active-tab-calibre-001",
+        "sourceHandle": "trigger-calibre-001-output-1",
+        "targetHandle": "active-tab-calibre-001-input-1",
+        "updatable": true,
+        "selectable": true,
+        "data": {},
+        "label": "",
+        "markerEnd": "arrowclosed",
+        "class": "source-trigger-calibre-001-output-1 target-active-tab-calibre-001-input-1"
+      },
+      {
+        "id": "vueflow__edge-active-tab-calibre-001-output-1-javascript-calibre-v3-render-001-input-1",
+        "type": "custom",
+        "source": "active-tab-calibre-001",
+        "target": "javascript-calibre-v3-render-001",
+        "sourceHandle": "active-tab-calibre-001-output-1",
+        "targetHandle": "javascript-calibre-v3-render-001-input-1",
+        "updatable": true,
+        "selectable": true,
+        "data": {},
+        "label": "",
+        "markerEnd": "arrowclosed",
+        "class": "source-active-tab-calibre-001-output-1 target-javascript-calibre-v3-render-001-input-1"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "trigger-calibre-001",
+        "type": "BlockBasic",
+        "initialized": false,
+        "position": {
+          "x": 80,
+          "y": 300
+        },
+        "data": {
+          "disableBlock": false,
+          "description": "手动运行 Calibre 文件页验证",
+          "type": "manual",
+          "interval": 60,
+          "delay": 5,
+          "date": "",
+          "time": "00:00",
+          "url": "",
+          "shortcut": "",
+          "activeInInput": false,
+          "isUrlRegex": false,
+          "days": [],
+          "contextMenuName": "",
+          "contextTypes": [],
+          "parameters": [],
+          "preferParamsInTab": false
+        },
+        "label": "trigger"
+      },
+      {
+        "id": "active-tab-calibre-001",
+        "type": "BlockBasic",
+        "initialized": false,
+        "position": {
+          "x": 420,
+          "y": 300
+        },
+        "data": {
+          "disableBlock": false
+        },
+        "label": "active-tab"
+      },
+      {
+        "id": "javascript-calibre-v3-render-001",
+        "type": "BlockBasic",
+        "initialized": false,
+        "position": {
+          "x": 760,
+          "y": 300
+        },
+        "data": {
+          "code": "try {\n  const rawUrl = window.location.href;\n  const rawPrefix = 'file:///path/to/user/Calibre%20书库';\n  const normalizedUrl = decodeURIComponent(rawUrl);\n  const normalizedPrefix = decodeURIComponent(rawPrefix);\n  const urlOk = normalizedUrl.startsWith(normalizedPrefix);\n  const main = document.querySelector('.calibreMain');\n  const contents = document.querySelectorAll('.calibreEbookContent');\n  const content = contents.length === 1 ? contents[0] : null;\n  if (!urlOk || !main || !content) {\n    window.alert(`渲染未执行\\nURL前缀匹配：${urlOk}\\n.calibreMain存在：${Boolean(main)}\\n.calibreEbookContent数量：${contents.length}`);\n  } else {\n    const styleId = 'automa-calibre-reader-style-v3';\n    let style = document.getElementById(styleId);\n    if (!style) {\n      style = document.createElement('style');\n      style.id = styleId;\n      document.head.appendChild(style);\n    }\n    style.textContent = `\n      body > *:not(:has(.calibreEbookContent)) { display: none !important; }\n      body > *:has(.calibreEbookContent) { display: block !important; }\n      body > *:has(.calibreEbookContent) *:not(:has(.calibreEbookContent)):not(.calibreEbookContent) { display: none !important; }\n      .calibreEbookContent {\n        display: block !important;\n        width: 80vw !important;\n        max-width: none !important;\n        min-height: 100vh;\n        margin-left: auto !important;\n        margin-right: auto !important;\n        padding: 2rem 3rem;\n        box-sizing: border-box;\n        color: #111 !important;\n        background: #fff !important;\n      }\n    `;\n    const safeUrl = rawUrl.length > 240 ? rawUrl.slice(0, 240) + '…' : rawUrl;\n    window.alert(`渲染样式已注入\\nURL前缀匹配：${urlOk}\\n.calibreEbookContent数量：${contents.length}\\n宽度：80vw\\n背景：白色\\n当前URL：${safeUrl}`);\n  }\n} catch (error) {\n  window.alert(`渲染异常：${String(error?.message || error).slice(0, 240)}`);\n}\nautomaNextBlock();",
+          "context": "website",
+          "description": "v3：验证 URL 和正文容器后注入幂等阅读样式",
+          "disableBlock": false,
+          "everyNewTab": false,
+          "preloadScripts": [],
+          "runBeforeLoad": false,
+          "timeout": 20000
+        },
+        "label": "javascript-code"
+      }
+    ],
+    "position": [
+      0,
+      0
+    ],
+    "zoom": 1,
+    "viewport": {
+      "x": 0,
+      "y": 0,
+      "zoom": 1
+    }
+  },
+  "settings": {
+    "publicId": "",
+    "aipowerToken": "",
+    "blockDelay": 0,
+    "saveLog": true,
+    "debugMode": false,
+    "restartTimes": 3,
+    "notification": true,
+    "execContext": "popup",
+    "reuseLastState": false,
+    "inputAutocomplete": true,
+    "onError": "stop-workflow",
+    "executedBlockOnWeb": false,
+    "insertDefaultColumn": false,
+    "defaultColumnName": "column"
+  },
+  "globalData": "{\n\t\"key\": \"value\"\n}",
+  "description": "v3：验证 Calibre 文件页并仅显示 .calibreEbookContent，白底、80vw、水平居中；样式仅注入当前页面。"
+}

@@ -1,0 +1,141 @@
+{
+  "extVersion": "1.30.02",
+  "name": "TEST Calibre reader overlay fullwidth v6",
+  "icon": "riWindowLine",
+  "table": [],
+  "version": "1.30.02",
+  "drawflow": {
+    "edges": [
+      {
+        "id": "vueflow__edge-trigger-calibre-001-output-1-active-tab-calibre-001-input-1",
+        "type": "custom",
+        "source": "trigger-calibre-001",
+        "target": "active-tab-calibre-001",
+        "sourceHandle": "trigger-calibre-001-output-1",
+        "targetHandle": "active-tab-calibre-001-input-1",
+        "updatable": true,
+        "selectable": true,
+        "data": {},
+        "label": "",
+        "markerEnd": "arrowclosed",
+        "class": "source-trigger-calibre-001-output-1 target-active-tab-calibre-001-input-1"
+      },
+      {
+        "id": "vueflow__edge-active-tab-calibre-001-output-1-javascript-calibre-v6-overlay-001-input-1",
+        "type": "custom",
+        "source": "active-tab-calibre-001",
+        "target": "javascript-calibre-v6-overlay-001",
+        "sourceHandle": "active-tab-calibre-001-output-1",
+        "targetHandle": "javascript-calibre-v6-overlay-001-input-1",
+        "updatable": true,
+        "selectable": true,
+        "data": {},
+        "label": "",
+        "markerEnd": "arrowclosed",
+        "class": "source-active-tab-calibre-001-output-1 target-javascript-calibre-v6-overlay-001-input-1"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "trigger-calibre-001",
+        "type": "BlockBasic",
+        "initialized": false,
+        "position": {
+          "x": 80,
+          "y": 300
+        },
+        "data": {
+          "disableBlock": false,
+          "description": "访问 Calibre file:// 页面时自动触发",
+          "type": "manual",
+          "interval": 60,
+          "delay": 5,
+          "date": "",
+          "time": "00:00",
+          "url": "",
+          "shortcut": "",
+          "activeInInput": false,
+          "isUrlRegex": false,
+          "days": [],
+          "contextMenuName": "",
+          "contextTypes": [],
+          "parameters": [],
+          "preferParamsInTab": false,
+          "triggers": [
+            {
+              "data": {
+                "isUrlRegex": true,
+                "supportSPA": true,
+                "url": "^file:///path/to/user/Calibre%20"
+              },
+              "id": "visit-calibre-v5-001",
+              "type": "visit-web"
+            }
+          ]
+        },
+        "label": "trigger"
+      },
+      {
+        "id": "active-tab-calibre-001",
+        "type": "BlockBasic",
+        "initialized": false,
+        "position": {
+          "x": 420,
+          "y": 300
+        },
+        "data": {
+          "disableBlock": false
+        },
+        "label": "active-tab"
+      },
+      {
+        "id": "javascript-calibre-v6-overlay-001",
+        "type": "BlockBasic",
+        "initialized": false,
+        "position": {
+          "x": 760,
+          "y": 300
+        },
+        "data": {
+          "code": "const rawUrl = window.location.href;\nconst normalizedUrl = decodeURIComponent(rawUrl);\nconst normalizedPrefix = decodeURIComponent('file:///path/to/user/Calibre%20书库');\nconst contents = document.querySelectorAll('.calibreEbookContent');\nconst content = contents.length === 1 ? contents[0] : null;\nif (!normalizedUrl.startsWith(normalizedPrefix)) throw new Error('Calibre file URL prefix mismatch');\nif (!content) throw new Error(`Expected exactly one .calibreEbookContent, found ${contents.length}`);\n\nfor (const id of [\n  'automa-calibre-reader-style-v3',\n  'automa-calibre-reader-style-v4',\n  'automa-calibre-reader-content-style-v5',\n  'automa-calibre-reader-panel-style-v5',\n  'automa-calibre-reader-content-style-v6',\n  'automa-calibre-reader-panel-style-v6',\n  'automa-calibre-reader-panel-v5',\n  'automa-calibre-reader-toggle-v5'\n]) document.getElementById(id)?.remove();\n\nconst contentStyle = document.createElement('style');\ncontentStyle.id = 'automa-calibre-reader-content-style-v6';\ncontentStyle.textContent = `\n  html, body, .calibreMain, .calibreEbookContent { width: 100% !important; max-width: none !important; min-width: 0 !important; margin-left: 0 !important; margin-right: 0 !important; box-sizing: border-box !important; background: #fff !important; }\n  html, body { min-height: 100% !important; margin-top: 0 !important; margin-bottom: 0 !important; padding: 0 !important; overflow-x: hidden !important; }\n  .calibreMain { margin: 0 !important; padding: 0 !important; }\n  .calibreEbookContent { display: block !important; padding: 2rem 3rem !important; overflow-x: hidden !important; overflow-wrap: anywhere !important; }\n  parsererror { display: none !important; }\n  .calibreEbookContent img, .calibreEbookContent svg, .calibreEbookContent video, .calibreEbookContent canvas { display: block !important; max-width: 100% !important; width: auto !important; height: auto !important; object-fit: contain !important; }\n  .calibreMeta, .calibreToc, .calibreEbNav, .calibreEbNavTop { display: none !important; }\n  @media (max-width: 720px) { .calibreEbookContent { width: calc(100vw - 24px) !important; max-width: calc(100vw - 24px) !important; padding: 16px !important; } }\n`;\ndocument.head.appendChild(contentStyle);\n\nconst panelStyle = document.createElement('style');\npanelStyle.id = 'automa-calibre-reader-panel-style-v6';\npanelStyle.textContent = `\n  #automa-calibre-reader-panel-v6 { position: fixed; top: 0; right: 0; width: 300px; height: 100vh; z-index: 2147483000; overflow: auto; box-sizing: border-box; padding: 16px; color: #1f2937; background: rgba(255,255,255,.98); border-left: 1px solid #d1d5db; box-shadow: -4px 0 16px rgba(0,0,0,.12); font: 14px/1.5 system-ui, sans-serif; }\n  #automa-calibre-reader-panel-v6[hidden] { display: none !important; }\n  #automa-calibre-reader-toggle-v6 { position: fixed; top: 16px; right: 300px; z-index: 2147483001; border: 1px solid #9ca3af; border-radius: 6px; padding: 6px 9px; color: #111827; background: #fff; cursor: pointer; }\n  #automa-calibre-reader-panel-v6 h2, #automa-calibre-reader-panel-v6 h3 { margin: 0 0 10px; color: #111827; }\n  #automa-calibre-reader-panel-v6 section { margin-bottom: 18px; }\n  #automa-calibre-reader-panel-v6 .automa-v5-nav { display: flex; gap: 8px; flex-wrap: wrap; }\n  #automa-calibre-reader-panel-v6 button, #automa-calibre-reader-panel-v6 a { color: #1d4ed8; }\n  #automa-calibre-reader-panel-v6 button { cursor: pointer; border: 1px solid #cbd5e1; border-radius: 4px; padding: 5px 8px; background: #f8fafc; }\n  #automa-calibre-reader-panel-v6 ul { margin: 0; padding-left: 18px; }\n  #automa-calibre-reader-panel-v6 li { margin: 5px 0; }\n  #automa-calibre-reader-panel-v6 .automa-v5-meta { white-space: pre-wrap; overflow-wrap: anywhere; }\n  @media (max-width: 720px) { #automa-calibre-reader-panel-v6 { width: min(86vw, 300px); } #automa-calibre-reader-toggle-v6 { right: min(86vw, 300px); } }\n`;\ndocument.head.appendChild(panelStyle);\n\nconst panel = document.createElement('aside');\npanel.id = 'automa-calibre-reader-panel-v6';\npanel.setAttribute('aria-label', 'Calibre 阅读控制面板');\nconst toggle = document.createElement('button');\ntoggle.id = 'automa-calibre-reader-toggle-v6';\ntoggle.type = 'button';\ntoggle.textContent = '显示面板';\ntoggle.setAttribute('aria-expanded', 'false');\nconst title = document.querySelector('.calibreMetaTitle')?.textContent.trim() || document.title;\nconst author = document.querySelector('.calibreMetaAuthor')?.textContent.trim() || '';\nconst prev = document.querySelector('.calibreEbNavTop a.calibreAPrev');\nconst next = document.querySelector('.calibreEbNavTop a.calibreANext');\nconst toc = document.querySelectorAll('.calibreToc a');\nconst section = (heading, contentNode) => { const s=document.createElement('section'); const h=document.createElement('h3'); h.textContent=heading; s.append(h, contentNode); return s; };\nconst meta = document.createElement('div'); meta.className='automa-v5-meta'; meta.textContent = [title, author].filter(Boolean).join('\\n');\nconst switchLabel = document.createElement('label'); const switchInput=document.createElement('input'); switchInput.type='checkbox'; switchInput.checked=true; switchLabel.append(switchInput, document.createTextNode(' 风格控制（开启）'));\nconst nav = document.createElement('div'); nav.className='automa-v5-nav';\nfor (const link of [prev, next]) if (link) { const button=document.createElement('button'); button.type='button'; button.textContent=link.textContent.trim(); button.addEventListener('click',()=>{ window.location.href=link.href; }); nav.appendChild(button); }\nconst tocList=document.createElement('ul');\nfor (const link of toc) { const li=document.createElement('li'); const a=document.createElement('a'); a.href=link.href; a.textContent=link.textContent.trim(); li.appendChild(a); tocList.appendChild(li); }\npanel.append(section('风格控制', switchLabel), section('书籍信息', meta), section('页面导航', nav), section('目录', tocList));\npanel.hidden = true;\ndocument.body.append(panel, toggle);\nconst styleToggle = (enabled) => { contentStyle.disabled = !enabled; switchLabel.lastChild.textContent = enabled ? ' 风格控制（开启）' : ' 风格控制（关闭）'; };\nswitchInput.addEventListener('change', () => styleToggle(switchInput.checked));\ntoggle.addEventListener('click', () => { const hidden = panel.hasAttribute('hidden'); panel.toggleAttribute('hidden', !hidden); toggle.textContent = hidden ? '隐藏面板' : '显示面板'; toggle.style.right = '8px'; toggle.setAttribute('aria-expanded', String(hidden)); });\nautomaNextBlock();",
+          "context": "website",
+          "description": "v6：隐藏 parsererror，应用全宽正文并创建默认折叠 overlay 面板",
+          "disableBlock": false,
+          "everyNewTab": false,
+          "preloadScripts": [],
+          "runBeforeLoad": false,
+          "timeout": 20000
+        },
+        "label": "javascript-code"
+      }
+    ],
+    "position": [
+      0,
+      0
+    ],
+    "zoom": 1,
+    "viewport": {
+      "x": 0,
+      "y": 0,
+      "zoom": 1
+    }
+  },
+  "settings": {
+    "publicId": "",
+    "aipowerToken": "",
+    "blockDelay": 0,
+    "saveLog": true,
+    "debugMode": false,
+    "restartTimes": 3,
+    "notification": true,
+    "execContext": "popup",
+    "reuseLastState": false,
+    "inputAutocomplete": true,
+    "onError": "stop-workflow",
+    "executedBlockOnWeb": false,
+    "insertDefaultColumn": false,
+    "defaultColumnName": "column"
+  },
+  "globalData": "{\n\t\"key\": \"value\"\n}",
+  "description": "v6：Calibre 正文与 body 同宽、图片防溢出、隐藏 parsererror、侧栏默认折叠并以 overlay 显示，无 alert。"
+}

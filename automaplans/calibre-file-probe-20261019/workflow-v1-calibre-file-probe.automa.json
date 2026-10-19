@@ -1,0 +1,130 @@
+{
+  "extVersion": "1.30.02",
+  "name": "TEST Calibre file calibreMain alert v1",
+  "icon": "riWindowLine",
+  "table": [],
+  "version": "1.30.02",
+  "drawflow": {
+    "edges": [
+      {
+        "id": "vueflow__edge-trigger-calibre-001-output-1-active-tab-calibre-001-input-1",
+        "type": "custom",
+        "source": "trigger-calibre-001",
+        "target": "active-tab-calibre-001",
+        "sourceHandle": "trigger-calibre-001-output-1",
+        "targetHandle": "active-tab-calibre-001-input-1",
+        "updatable": true,
+        "selectable": true,
+        "data": {},
+        "label": "",
+        "markerEnd": "arrowclosed",
+        "class": "source-trigger-calibre-001-output-1 target-active-tab-calibre-001-input-1"
+      },
+      {
+        "id": "vueflow__edge-active-tab-calibre-001-output-1-javascript-calibre-001-input-1",
+        "type": "custom",
+        "source": "active-tab-calibre-001",
+        "target": "javascript-calibre-001",
+        "sourceHandle": "active-tab-calibre-001-output-1",
+        "targetHandle": "javascript-calibre-001-input-1",
+        "updatable": true,
+        "selectable": true,
+        "data": {},
+        "label": "",
+        "markerEnd": "arrowclosed",
+        "class": "source-active-tab-calibre-001-output-1 target-javascript-calibre-001-input-1"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "trigger-calibre-001",
+        "type": "BlockBasic",
+        "initialized": false,
+        "position": {
+          "x": 80,
+          "y": 300
+        },
+        "data": {
+          "disableBlock": false,
+          "description": "手动运行 Calibre 文件页验证",
+          "type": "manual",
+          "interval": 60,
+          "delay": 5,
+          "date": "",
+          "time": "00:00",
+          "url": "",
+          "shortcut": "",
+          "activeInInput": false,
+          "isUrlRegex": false,
+          "days": [],
+          "contextMenuName": "",
+          "contextTypes": [],
+          "parameters": [],
+          "preferParamsInTab": false
+        },
+        "label": "trigger"
+      },
+      {
+        "id": "active-tab-calibre-001",
+        "type": "BlockBasic",
+        "initialized": false,
+        "position": {
+          "x": 420,
+          "y": 300
+        },
+        "data": {
+          "disableBlock": false
+        },
+        "label": "active-tab"
+      },
+      {
+        "id": "javascript-calibre-001",
+        "type": "BlockBasic",
+        "initialized": false,
+        "position": {
+          "x": 760,
+          "y": 300
+        },
+        "data": {
+          "code": "try {\n  const url = window.location.href;\n  const prefix = 'file:///path/to/user/Calibre%20书库';\n  const matches = document.querySelectorAll('.calibreMain');\n  const urlOk = url.startsWith(prefix);\n  const elementOk = matches.length > 0;\n  const safeUrl = url.length > 240 ? url.slice(0, 240) + '…' : url;\n  const status = urlOk && elementOk ? '通过' : '未通过';\n  window.alert(`${status}\\nURL前缀匹配：${urlOk}\\n.calibreMain存在：${elementOk}\\n匹配数量：${matches.length}\\n当前URL：${safeUrl}`);\n} catch (error) {\n  window.alert(`检测异常：${String(error?.message || error).slice(0, 240)}`);\n}\nautomaNextBlock();",
+          "context": "website",
+          "description": "在文件页检测 URL 前缀和 .calibreMain，alert 汇报",
+          "disableBlock": false,
+          "everyNewTab": false,
+          "preloadScripts": [],
+          "runBeforeLoad": false,
+          "timeout": 20000
+        },
+        "label": "javascript-code"
+      }
+    ],
+    "position": [
+      0,
+      0
+    ],
+    "zoom": 1,
+    "viewport": {
+      "x": 0,
+      "y": 0,
+      "zoom": 1
+    }
+  },
+  "settings": {
+    "publicId": "",
+    "aipowerToken": "",
+    "blockDelay": 0,
+    "saveLog": true,
+    "debugMode": false,
+    "restartTimes": 3,
+    "notification": true,
+    "execContext": "popup",
+    "reuseLastState": false,
+    "inputAutocomplete": true,
+    "onError": "stop-workflow",
+    "executedBlockOnWeb": false,
+    "insertDefaultColumn": false,
+    "defaultColumnName": "column"
+  },
+  "globalData": "{\n\t\"key\": \"value\"\n}",
+  "description": "手动验证当前 file:// Calibre 页面 URL 前缀和 .calibreMain 元素；需为 Automa 开启允许访问文件网址。"
+}

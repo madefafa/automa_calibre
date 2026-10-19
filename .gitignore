@@ -1,0 +1,50 @@
+# Git internals and local tool metadata
+.git/
+**/.git/
+.roo/
+.vscode/
+.idea/
+.DS_Store
+MEMORY.md
+
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+**/credentials.*
+**/*secret*
+**/*token*
+**/*password*
+
+# Local runtime and caches
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.cache/
+.tmp/
+.tmp*/
+*.log
+
+# Common dependencies and build output
+node_modules/
+dist/
+build/
+.next/
+coverage/
+.venv/
+venv/
+
+# OS/editor hidden files and folders
+**/.*
+!.gitignore
+!.env.example
